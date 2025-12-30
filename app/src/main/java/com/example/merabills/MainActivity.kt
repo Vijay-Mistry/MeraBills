@@ -1,9 +1,7 @@
 package com.example.merabills
 
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun handleSquareClick(rowIndex: Int, squareIndex: Int) {
         val removed = dataManager.removeSquare(rowIndex, squareIndex)
 
@@ -70,7 +67,9 @@ class MainActivity : AppCompatActivity() {
                 dataManager.removeRow(rowIndex)
                 rowAdapter.notifyItemRemoved(rowIndex)
             } else {
-                rowAdapter.notifyDataSetChanged()
+                val viewHolder = binding.recyclerView.findViewHolderForAdapterPosition(rowIndex) as? RowAdapter.RowViewHolder
+                val squareAdapter = viewHolder?.getSquareAdapter()
+                squareAdapter?.notifyItemRemoved(squareIndex)
             }
         }
     }

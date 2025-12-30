@@ -126,6 +126,8 @@ class RowAdapter(
         fun onRecycled() {
             binding.horizontalRecyclerView.stopScroll()
         }
+
+        fun getSquareAdapter(): SquareAdapter? = currentAdapter
     }
 
     companion object {
