@@ -76,8 +76,9 @@ class SquareDataManager private constructor(
     companion object {
         private const val KEY_ROWS = "rows"
         private const val TOTAL_SQUARES = 10000
-        private const val SQUARES_PER_ROW = 100
-        private const val TOTAL_ROWS = TOTAL_SQUARES / SQUARES_PER_ROW
+        private const val MIN_SQUARES_PER_ROW = 1
+        private const val MAX_SQUARES_PER_ROW = 100
+        private const val TOTAL_ROWS = TOTAL_SQUARES / MAX_SQUARES_PER_ROW
 
         private const val COLOR_MASK = 0xFF000000.toInt()
         private const val COLOR_MAX = 256
@@ -87,10 +88,18 @@ class SquareDataManager private constructor(
             val random = Random.Default
             var currentIndex = 0
 
-            repeat(TOTAL_ROWS) {
-                val squares = ArrayList<Square>(SQUARES_PER_ROW)
+            while (currentIndex < TOTAL_SQUARES) {
+                val remaining = TOTAL_SQUARES - currentIndex
+                val maxForRow = minOf(remaining, MAX_SQUARES_PER_ROW)
 
-                repeat(SQUARES_PER_ROW) {
+                val squaresInRow = if (maxForRow > MIN_SQUARES_PER_ROW) {
+                    random.nextInt(MIN_SQUARES_PER_ROW, maxForRow + 1)
+                } else {
+                    remaining
+                }
+
+                val squares = ArrayList<Square>(squaresInRow)
+                repeat(squaresInRow) {
                     squares.add(Square(currentIndex++, generateRandomColor(random)))
                 }
 
